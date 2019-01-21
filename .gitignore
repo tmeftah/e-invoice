@@ -102,3 +102,14 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+#coverage
+*coverage*
+
+#database
+*.db
+*.database
+
+# vscode
+.vscode/
