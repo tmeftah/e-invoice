@@ -1,5 +1,7 @@
 # e-invoice
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/709aac6159724d5195e2120d67b6279d)](https://app.codacy.com/app/tmeftah/e-invoice?utm_source=github.com&utm_medium=referral&utm_content=tmeftah/e-invoice&utm_campaign=Badge_Grade_Settings)
+
 e-invoice for small business based on flask, jwt and vuejs.
 
 ## Flask-app (backend)
