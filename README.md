@@ -7,55 +7,47 @@ e-invoice for small business based on flask, jwt and vuejs.
 ## Flask-app (backend)
 
 ### Terminal commands
+Befor being able to run the app please be sure that you have install python2 and pip on your computer and then install dependencies.
+When using virtualenv activate it bevor executing this command.
 
+```python
+pip install requirements.txt
 ```
-Befor being able to run the app please be sure that you have install python2 and pip on your computer.
-
-Initial installation: pip install requirements.txt
-When using virtualenv activate it bevor executing the command above.
-
-after downloading all the dependencies it's time to run the app
-- run the application: python manage.py run or python
-- run test: python app\test\name_of_test.py
+After downloading all the dependencies it's time to run the application
+```python
+python manage.py run
 ```
+you should see ```Running on http://127.0.0.1:5000/```
+Now the backend is working correctly use an API development environment of your choise. I prefer Postman.
 
 ### Using Postman
-
-```
-Default url of app is: http://127.0.0.1:5000
 for the first use you should register at least one user following:
+```
 URL: 			http://127.0.0.1:5000/registration
 Methode: 		Post
 Body Form-data(Keys): 	username,password
-
+```
 after successfully registered go to login
+```
 URL: 			http://127.0.0.1:5000/login
 Methode: 		Post
 Body Form-data(Keys): 	username,password
 as a responce you get 2 token.
-
-Each Request must have the session-token on authorization.
-Example:
-get product list:
+```
+Each new request must have the session-token on authorization.
+- product list
+```
 URL: 			http://127.0.0.1:5000/product/
 Methode: 		Get
 Key: Authorization
 Value: "Bearer session_token_generated_during_login"
 ```
-
-### Todo
-
-- [ ] vuejs client
-- [ ] add additional tables to database (products/custumers/invoices/settings , etc..)
-- [ ] set new tests
-- [ ] connect the repo to one online coverage provider
-
 ### Debug on vscode
 
 - Settings (launch.js):
   select on the debbuging module flask (or add a new configuration)
 
-
+```javascript
        {
          "name": "Python: Flask",
          "type": "python",
@@ -71,6 +63,13 @@ Value: "Bearer session_token_generated_during_login"
                  ],
          "jinja": false
        }
+```
+### Todo
+
+- [ ] vuejs client
+- [ ] add additional tables to database (products/custumers/invoices/settings , etc..)
+- [ ] set new tests
+- [ ] connect the repo to one online coverage provider
 
 ### Contributing
 
