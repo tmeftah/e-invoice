@@ -43,7 +43,7 @@ class UserLogin(Resource):
         data = parser_auth.parse_args()
         current_user = UserModel.find_by_username(data['username'])
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}
+            return {'message': 'User {} doesn\'t exist'.format(data['username'])}, 401
 
         if UserModel.verify_hash(data['password'], current_user.password):
             # Create our JWTs
