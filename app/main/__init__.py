@@ -2,6 +2,7 @@ import sys
 from os.path import abspath, dirname, join, pardir
 from importlib import import_module
 from flask import Flask, current_app
+from flask_cors import CORS
 from resources import db, api, jwt
 from config import config_by_name
 
@@ -32,6 +33,7 @@ def register_extension(app):
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
+    CORS(app)
     register_modules(list_of_module)
     register_extension(app)
 
