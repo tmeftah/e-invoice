@@ -56,7 +56,7 @@ class UserLogin(Resource):
             add_token_to_database(
                 refresh_token, current_app.config['JWT_IDENTITY_CLAIM'])
 
-            return {'message': 'Logged in as {}'.format(current_user.username),
+            return {'user': {"username": current_user.username},
                     'access_token': access_token,
                     'refresh_token': refresh_token
                     }
