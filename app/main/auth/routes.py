@@ -1,3 +1,4 @@
+import datetime
 from flask import jsonify, current_app, request
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_raw_jwt, get_jwt_identity
@@ -47,7 +48,9 @@ class UserLogin(Resource):
 
         if UserModel.verify_hash(data['password'], current_user.password):
             # Create our JWTs
-            access_token = create_access_token(identity=data['username'])
+            expires = datetime.timedelta(seconds=20)
+            access_token = create_access_token(
+                identity=data['username'], expires_delta=expires)
             refresh_token = create_refresh_token(identity=data['username'])
 
             # Store the tokens in our store with a status of not currently revoked.
