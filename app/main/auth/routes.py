@@ -2,10 +2,10 @@ import datetime
 from flask import jsonify, current_app, request
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_raw_jwt, get_jwt_identity
-from .jwt import add_token_to_database, get_user_tokens, unrevoke_token, revoke_token
-from .exceptions_list import TokenNotFound
-from ..resources import api
-from ..users.model import UserModel
+from app.main.auth.jwt import add_token_to_database, get_user_tokens, unrevoke_token, revoke_token
+from app.main.auth.exceptions_list import TokenNotFound
+from app.main.resources import api
+from app.main.users.model import UserModel
 
 
 parser_auth = reqparse.RequestParser()

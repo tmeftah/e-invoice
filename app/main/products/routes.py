@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from ..resources import api
-from ..users.decorators import requires_access_level
-from ..users.model import ACCESS
+from app.main.resources import api
+from app.main.users.decorators import requires_access_level
+from app.main.users.model import ACCESS
 
 
 class List(Resource):

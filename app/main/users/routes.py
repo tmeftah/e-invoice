@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from decorators import requires_access_level
-from model import UserModel, ACCESS
+from app.main.users.decorators import requires_access_level
+from app.main.users.model import UserModel, ACCESS
 
 
 class UserList(Resource):
