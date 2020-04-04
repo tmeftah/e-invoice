@@ -21,7 +21,7 @@ list_of_module = ['auth', 'users', 'products']
 
 def register_modules(modules_list):
     for module_name in modules_list:
-        module = import_module(__name__+'.{}'.format(module_name))
+        import_module(__name__+'.{}'.format(module_name))
 
 
 def register_extension(app):
