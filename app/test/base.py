@@ -1,14 +1,17 @@
 import unittest
 
-from app.main import db
-from manage import app
+from app.main import create_app
+from app.main.resources import db
+
+
+app = create_app('test')
 
 
 class BaseTestCase(unittest.TestCase):
     """ Base Tests """
 
     def setUp(self):
-        app.config.from_object('app.main.config.TestingConfig')
+
         self.app = app.test_client()
         with app.app_context():
             db.create_all()
