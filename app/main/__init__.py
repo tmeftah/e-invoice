@@ -37,6 +37,15 @@ def create_app(config_name):
     register_modules(list_of_module)
     register_extension(app)
 
+    # Ensure FOREIGN KEY for sqlite3
+    if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
+        def _fk_pragma_on_connect(dbapi_con, con_record):  # noqa
+            dbapi_con.execute('pragma foreign_keys=ON')
+
+        with app.app_context():
+            from sqlalchemy import event
+            event.listen(db.engine, 'connect', _fk_pragma_on_connect)
+
     @app.before_first_request
     def create_tables():
         db.create_all()
