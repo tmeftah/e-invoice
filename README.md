@@ -1,6 +1,6 @@
 # e-invoice
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/709aac6159724d5195e2120d67b6279d)](https://app.codacy.com/app/tmeftah/e-invoice?utm_source=github.com&utm_medium=referral&utm_content=tmeftah/e-invoice&utm_campaign=Badge_Grade_Settings)   [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/0cc998c220f948068232af96efd3741b)](https://www.codacy.com/app/tmeftah/e-invoice?utm_source=github.com&utm_medium=referral&utm_content=tmeftah/e-invoice&utm_campaign=Badge_Coverage)   [![Maintainability](https://api.codeclimate.com/v1/badges/41442868dd3c5f8607cc/maintainability)](https://codeclimate.com/github/tmeftah/e-invoice/maintainability)   [![Test Coverage](https://api.codeclimate.com/v1/badges/41442868dd3c5f8607cc/test_coverage)](https://codeclimate.com/github/tmeftah/e-invoice/test_coverage)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/709aac6159724d5195e2120d67b6279d)](https://app.codacy.com/app/tmeftah/e-invoice?utm_source=github.com&utm_medium=referral&utm_content=tmeftah/e-invoice&utm_campaign=Badge_Grade_Settings)   [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/0cc998c220f948068232af96efd3741b)](https://www.codacy.com/app/tmeftah/e-invoice?utm_source=github.com&utm_medium=referral&utm_content=tmeftah/e-invoice&utm_campaign=Badge_Coverage)
 
 e-invoice for small business based on flask, jwt and vuejs.
 
