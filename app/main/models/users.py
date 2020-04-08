@@ -33,15 +33,15 @@ class UserModel(db.Model):
         return sha256.verify(password, hash)
 
     @classmethod
-    def find_by_id(self, id):
-        return self.query.filter_by(id=id).first()
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
 
     @classmethod
-    def find_by_username(self, username):
-        return self.query.filter_by(username=username).first()
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
 
     @classmethod
-    def return_all(self):
+    def return_all(cls):
         def to_json(user):
             return {
                 'username': user.username,
@@ -50,9 +50,9 @@ class UserModel(db.Model):
         return {'users': list(map(lambda user: to_json(user), UserModel.query.all()))}
 
     @classmethod
-    def delete_all(self):
+    def delete_all(cls):
         try:
-            num_rows_deleted = db.session.query(self).delete()
+            num_rows_deleted = db.session.query(cls).delete()
             db.session.commit()
             return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
         except:

@@ -20,16 +20,16 @@ class ProductModel(db.Model):
     user = db.relationship('UserModel')
 
     @classmethod
-    def find_by_name(self, name):
-        return self.query.filter_by(name=name).first()
+    def find_by_name(cls, name):
+        return cls.query.filter_by(name=name).first()
 
     @classmethod
-    def find_by_id(self, id):
-        return self.query.filter_by(id=id).first()
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
 
     @classmethod
-    def return_all(self):
-        return {'products': list(map(lambda product: self.to_json(product), ProductModel.query.all()))}
+    def return_all(cls):
+        return {'products': list(map(lambda product: cls.to_json(product), ProductModel.query.all()))}
 
     def to_json(self):
         return {
