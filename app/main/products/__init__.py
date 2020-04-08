@@ -1,6 +1,6 @@
 from app.main.resources import api
-from app.main.products.routes import List, GetProduct
+from app.main.products.routes import ProductList, Product
 
 
-api.add_resource(List, '/product/list')
-api.add_resource(GetProduct, '/product/')
+api.add_resource(ProductList, '/products', endpoint='products')
+api.add_resource(Product, '/products/<int:id>', endpoint='product')
