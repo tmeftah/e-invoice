@@ -5,7 +5,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 from app.main.auth.jwt import add_token_to_database, get_user_tokens, unrevoke_token, revoke_token
 from app.main.auth.exceptions_list import TokenNotFound
 from app.main.resources import api
-from app.main.users.model import UserModel
+from app.main.models.users import UserModel
 
 
 parser_auth = reqparse.RequestParser()
@@ -100,7 +100,7 @@ class GetTokenList(Resource):
 class ModifyToken(Resource):
     @jwt_required
     def put(self, token_id):
-         # Get and verify the desired revoked status from the body
+        # Get and verify the desired revoked status from the body
         parser = reqparse.RequestParser()
         parser.add_argument(
             'revoke', type=bool, help='This field cannot be blank', required=True)

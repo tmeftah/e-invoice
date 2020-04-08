@@ -1,6 +1,6 @@
 from functools import wraps
 from flask_jwt_extended import get_jwt_identity
-from app.main.users.model import UserModel
+from app.main.models.users import UserModel
 
 
 def requires_access_level(access_level):
