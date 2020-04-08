@@ -29,7 +29,7 @@ class ProductModel(db.Model):
 
     @classmethod
     def return_all(cls):
-        return {'products': list(map(lambda product: cls.to_json(product), ProductModel.query.all()))}
+        return {'products': list(map(cls.to_json, ProductModel.query.all()))}
 
     def to_json(self):
         return {
