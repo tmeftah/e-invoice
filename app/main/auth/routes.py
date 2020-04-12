@@ -48,7 +48,7 @@ class UserLogin(Resource):
 
         if UserModel.verify_hash(data['password'], current_user.password):
             # Create our JWTs
-            expires = datetime.timedelta(seconds=20)
+            expires = datetime.timedelta(seconds=360)
             access_token = create_access_token(
                 identity=data['username'], expires_delta=expires)
             refresh_token = create_refresh_token(identity=data['username'])
