@@ -77,4 +77,4 @@ class ProductSchema(Schema):
 
 
 class ProductPaginationSchema(PaginationSchema):
-    data = fields.Nested(ProductSchema, attribute='items', many=True)
+    products = fields.Nested(ProductSchema, attribute='items', many=True)
