@@ -3,6 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_refresh_token_required, decode_token
 from app.main.resources import db, jwt, api
+from app.main.models.users import UserModel
 from app.main.models.auth import TokenBlacklist
 from app.main.auth.exceptions_list import TokenNotFound
 
@@ -108,6 +109,15 @@ def prune_database():
 def check_if_token_revoked(decoded_token):
     return is_token_revoked(decoded_token)
 
+
+@jwt.user_loader_callback_loader
+def user_loader_callback(identity):
+
+    user = UserModel.find_by_username(identity)
+    if user:
+        return user
+
+    return None
 
 # class RevokedTokenModel(db.Model):
 #     __tablename__ = 'revoked_tokens'
