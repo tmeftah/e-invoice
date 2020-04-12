@@ -1,53 +1,57 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from flask import request, jsonify
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import jwt_required
+from marshmallow import ValidationError
+from flask_jwt_extended import jwt_required, current_user
 from app.main.resources import api
 from app.main.models.products import ProductModel
+from app.main.schemas.product import ProductSchema, ProductPaginationSchema, ProductSearchSchema
 from app.main.users.decorators import requires_access_level
 from app.main.models.users import ACCESS
 
 
+product_pagiantion_schema = ProductPaginationSchema()
+product_search_schema = ProductSearchSchema()
+
+
 class ProductList(Resource):
-    # decorators = [jwt_required]
-    # @jwt_required
+
+    @jwt_required
     # @requires_access_level(ACCESS['guest'])
-    id = 0
-
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('name', type=str, required=True,
-                                   help='No product name provided',
-                                   location='json')
-        self.reqparse.add_argument('partNumber', type=str, default="000",
-                                   location='json')
-        self.reqparse.add_argument('weight', type=float, default=0.0,
-                                   location='json')
-        self.reqparse.add_argument('createdAt', type=datetime, default=datetime.utcnow,
-                                   location='json')
-        self.reqparse.add_argument('user_id', type=int,
-                                   location='json')
-
-        super(ProductList, self).__init__()
-
     def get(self):
-        return ProductModel.return_all()
 
+        json_data = request.get_json()
+
+        try:
+            data = product_search_schema.load(json_data)
+        except ValidationError as err:
+            return err.messages
+
+        products = ProductModel.get_all_published(
+            "", data.get("page"), data.get("per_page"), data.get("sort"), data.get("order"))
+
+        return product_pagiantion_schema.dump(products)
+
+    @jwt_required
     def post(self):
+        json_data = request.get_json()
+        schema = ProductSchema(exclude=("hyperlink",))
+        try:
+            data = schema.load(json_data)
+        except ValidationError as err:
+            return err.messages
 
-        args = self.reqparse.parse_args()
-
-        if ProductModel.find_by_name(args['name']):
-            return {'message': "A product with name '{}' already exists. Please choose other refence name.".format(args['name']),
+        if ProductModel.find_by_name(data.get("name")):
+            return {'message': "A product with name '{}' already exists. Please choose other refence name.".format(data.get("name")),
                     'status': 'fail'}, 400
 
-        new_product = ProductModel(
-            **args
-        )
         try:
+            new_product = ProductModel(**data)
+            new_product.createdBy_id = current_user.id
             new_product.save_to_db()
-            return {'message': 'Product {} was created'.format(args['name']),
-                    'status': 'success'}, 201
+            return schema.dump(new_product), 201
+
         except Exception as e:
             print(e)
             return {'message': 'Something went wrong'}, 500

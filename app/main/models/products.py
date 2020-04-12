@@ -1,4 +1,6 @@
 from datetime import datetime
+from sqlalchemy.exc import DatabaseError
+from sqlalchemy import asc, desc, or_
 from app.main.resources import db
 
 
@@ -15,9 +17,28 @@ class ProductModel(db.Model):
     description = db.Column(db.String(120))
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
     updateAt = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-                        nullable=False)
-    user = db.relationship('UserModel')
+    createdBy_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                             nullable=False)
+    updatedBy_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                             nullable=False)
+    createdBy = db.relationship(
+        'UserModel', backref="createdBy", foreign_keys=[createdBy_id])
+    updatedBy = db.relationship(
+        'UserModel', backref="updatedBy", foreign_keys=[updatedBy_id])
+
+    @classmethod
+    def get_all_published(cls, q, page, per_page, sort, order):
+
+        keyword = '%{keyword}%'.format(keyword=q)
+
+        if order == 'asc':
+            sort_logic = asc(getattr(cls, sort))
+        else:
+            sort_logic = desc(getattr(cls, sort))
+
+        return cls.query.filter(or_(cls.name.ilike(keyword),
+                                    cls.description.ilike(keyword))). \
+            order_by(sort_logic).paginate(page=page, per_page=per_page)
 
     @classmethod
     def find_by_name(cls, name):
@@ -44,8 +65,13 @@ class ProductModel(db.Model):
         }
 
     def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
+
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
     def __repr__(self):
         return "<Product '{}'>".format(self.name)
