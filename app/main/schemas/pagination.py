@@ -20,7 +20,6 @@ class PaginationSchema(Schema):
     def get_url(page):
 
         query_args = request.args.to_dict()
-        print(query_args)
         query_args['page'] = page
 
         return '{}?{}'.format(request.base_url, urlencode(query_args))
