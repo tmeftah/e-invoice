@@ -33,8 +33,8 @@ class UserSchema(Schema):
 
 class ProductSearchSchema(Schema):
 
-    page = fields.Int(missing=2)
-    per_page = fields.Int(missing=2)
+    page = fields.Int(missing=1)
+    per_page = fields.Int(missing=10)
     sort = fields.Str(missing="createdAt")
     order = fields.Str(missing="desc")
 
