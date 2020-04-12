@@ -19,8 +19,7 @@ class ProductModel(db.Model):
     updateAt = db.Column(db.DateTime)
     createdBy_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                              nullable=False)
-    updatedBy_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-                             nullable=False)
+    updatedBy_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     createdBy = db.relationship(
         'UserModel', backref="createdBy", foreign_keys=[createdBy_id])
     updatedBy = db.relationship(
