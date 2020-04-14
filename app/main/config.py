@@ -9,6 +9,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'secret_key_please_change')
     DEBUG = False
+    JWT_ERROR_MESSAGE_KEY = 'message'
 
 
 class DevelopmentConfig(Config):
