@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from http import HTTPStatus
 from flask import request, jsonify
 from flask_restful import Resource, reqparse
 from marshmallow import ValidationError
@@ -44,7 +45,7 @@ class ProductList(Resource):
 
         if ProductModel.find_by_name(data.get("name")):
             return {'message': "A product with name '{}' already exists. Please choose other refence name.".format(data.get("name")),
-                    'status': 'fail'}, 400
+                    'status': 'fail'}, HTTPStatus.BAD_REQUEST
 
         try:
             new_product = ProductModel(**data)
@@ -54,7 +55,7 @@ class ProductList(Resource):
 
         except Exception as e:
             print(e)
-            return {'message': 'Something went wrong'}, 500
+            return {'message': 'Something went wrong'}, HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 class Product(Resource):
@@ -69,7 +70,7 @@ class Product(Resource):
         if product:
             return product.to_json()
         else:
-            return {'msg': 'no product found'}, 404
+            return {'message': 'no product found'}, HTTPStatus.NOT_FOUND
 
     def put(self, id):
 
@@ -79,6 +80,6 @@ class Product(Resource):
             product.name = args['name']
             product.save_to_db()
 
-            return {'msg': 'product {} found'.format(args['name'])}, 200
+            return {'message': 'product {} found'.format(args['name'])}, HTTPStatus.OK
         else:
-            return {'msg': 'no product found'}, 404
+            return {'message': 'no product found'}, HTTPStatus.NOT_FOUND

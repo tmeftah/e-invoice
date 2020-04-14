@@ -1,4 +1,5 @@
 import datetime
+from http import HTTPStatus
 from flask import jsonify, current_app, request
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_raw_jwt, get_jwt_identity
@@ -34,9 +35,9 @@ class UserRegistration(Resource):
             return {'message': 'User {} was created'.format(data['username']), 'status': 'success'
                     # 'access_token': access_token,
                     # 'refresh_token': refresh_token
-                    }, 201
+                    }, HTTPStatus.CREATED
         except:
-            return {'message': 'Something went wrong'}, 500
+            return {'message': 'Something went wrong'}, HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 class UserLogin(Resource):
@@ -44,7 +45,7 @@ class UserLogin(Resource):
         data = parser_auth.parse_args()
         current_user = UserModel.find_by_username(data['username'])
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}, 401
+            return {'message': 'User {} doesn\'t exist'.format(data['username'])}, HTTPStatus.UNAUTHORIZED
 
         if UserModel.verify_hash(data['password'], current_user.password):
             # Create our JWTs
@@ -64,7 +65,7 @@ class UserLogin(Resource):
                     'refresh_token': refresh_token
                     }
         else:
-            return {'message': 'Wrong credentials'}, 401
+            return {'message': 'Wrong credentials'},  HTTPStatus.UNAUTHORIZED
         # return {'message': 'User login'}
 
 
@@ -76,7 +77,7 @@ class TokenRefresh(Resource):
         access_token = create_access_token(identity=current_user)
         add_token_to_database(
             access_token, current_app.config['JWT_IDENTITY_CLAIM'])
-        return {'access_token': access_token}, 201
+        return {'access_token': access_token},  HTTPStatus.CREATED
 
 
 class GetTokenList(Resource):
@@ -116,7 +117,7 @@ class ModifyToken(Resource):
                 unrevoke_token(token_id, user_identity)
                 return {'msg': 'Token unrevoked'}
         except TokenNotFound:
-            return {'msg': 'The specified token was not found'}, 404
+            return {'msg': 'The specified token was not found'},  HTTPStatus.NOT_FOUND
 
 
 class UserLogoutAccess(Resource):
@@ -128,7 +129,7 @@ class UserLogoutAccess(Resource):
             revoked_token.add()
             return {'message': 'Access token has been revoked'}
         except:
-            return {'message': 'Something went wrong'}, 500
+            return {'message': 'Something went wrong'},  HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 class UserLogoutRefresh(Resource):
@@ -140,4 +141,4 @@ class UserLogoutRefresh(Resource):
             revoked_token.add()
             return {'message': 'Refresh token has been revoked'}
         except:
-            return {'message': 'Something went wrong'}, 500
+            return {'message': 'Something went wrong'}, HTTPStatus.INTERNAL_SERVER_ERROR
