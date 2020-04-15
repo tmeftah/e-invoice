@@ -2,9 +2,11 @@
 from datetime import datetime
 from http import HTTPStatus
 from flask import request, jsonify
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from marshmallow import ValidationError
 from flask_jwt_extended import jwt_required, current_user
+from webargs import fields
+from webargs.flaskparser import use_kwargs
 from app.main.resources import api, cache
 from app.main.models.products import ProductModel
 from app.main.schemas.product import ProductSchema, ProductPaginationSchema, ProductSearchSchema
@@ -12,28 +14,31 @@ from app.main.users.decorators import requires_access_level
 from app.main.models.users import ACCESS
 from app.main.utils import clear_cache, cache_json_keys
 
-
+product_schema = ProductSchema()
 product_pagiantion_schema = ProductPaginationSchema()
-product_search_schema = ProductSearchSchema()
-
 
 
 class ProductList(Resource):
 
     # @requires_access_level(ACCESS['guest'])
 
-    @cache.cached(timeout=60, key_prefix=cache_json_keys)
+    # @cache.cached(timeout=60, key_prefix=cache_json_keys)
     @jwt_required
-    def get(self):
-        json_data = request.get_json()
+    @use_kwargs({'q': fields.Str(missing=''),
+                 'page': fields.Int(missing=1),
+                 'per_page': fields.Int(missing=20),
+                 'sort': fields.Str(missing='weight'),
+                 'order': fields.Str(missing='desc')})
+    def get(self, q, page, per_page, sort, order):
 
-        try:
-            data = product_search_schema.load(json_data)
-        except ValidationError as err:
-            return err.messages
+        # json_data = request.get_json()
 
+        # try:
+        #     data = product_search_schema.load(json_data)
+        # except ValidationError as err:
+        #     return err.messages
         products = ProductModel.get_all_published(
-            "", data.get("page"), data.get("per_page"), data.get("sort"), data.get("order"))
+            "",  page, per_page, sort, order)
 
         return product_pagiantion_schema.dump(products)
 
@@ -54,7 +59,7 @@ class ProductList(Resource):
             new_product = ProductModel(**data)
             new_product.createdBy_id = current_user.id
             new_product.save_to_db()
-            return schema.dump(new_product), 201
+            return schema.dump(new_product), HTTPStatus.CREATED
 
         except Exception as e:
             print(e)
@@ -62,9 +67,6 @@ class ProductList(Resource):
 
 
 class Product(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('weight')
-    parser.add_argument('name')
 
    # @jwt_required
    # @requires_access_level(ACCESS['user'])
