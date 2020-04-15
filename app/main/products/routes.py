@@ -78,15 +78,28 @@ class Product(Resource):
         else:
             return {'message': 'no product found'}, HTTPStatus.NOT_FOUND
 
+    @jwt_required
     def put(self, id):
 
-        args = self.parser.parse_args()
-        product = ProductModel.find_by_id(id)
-        if product:
-            product.name = args['name']
-            product.save_to_db()
-            clear_cache('/products')
+        json_data = request.get_json()
+        try:
+            data = product_schema.load(data=json_data, partial=('name',))
+        except ValidationError as err:
+            return err.messages
 
-            return {'message': 'product {} found'.format(args['name'])}, HTTPStatus.OK
-        else:
-            return {'message': 'no product found'}, HTTPStatus.NOT_FOUND
+        product = ProductModel.find_by_id(id)
+
+        if product is None:
+            return {'message': 'Product not found'}, HTTPStatus.NOT_FOUND
+
+        product.name = data.get('name') or product.name
+        product.description = data.get('description') or product.description
+        product.partNumber = data.get('partNumber') or product.partNumber
+
+        product.updatedBy_id = current_user.id
+
+        product.save_to_db()
+
+        clear_cache('/products')
+
+        return product_schema.dump(product), HTTPStatus.OK
