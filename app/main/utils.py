@@ -5,7 +5,6 @@ from app.main.resources import cache
 def clear_cache(key_prefix):
 
     keys = [key for key in cache.cache._cache.keys() if key.startswith(key_prefix)]
-    print('------------------- ', keys, ' -----------------')
 
     cache.delete_many(*keys)
 
