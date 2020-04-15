@@ -23,12 +23,13 @@ class ProductList(Resource):
     # @requires_access_level(ACCESS['guest'])
 
     # @cache.cached(timeout=60, key_prefix=cache_json_keys)
-    @jwt_required
-    @use_kwargs({'q': fields.Str(missing=''),
-                 'page': fields.Int(missing=1),
+    @use_kwargs({"q": fields.Str(missing=''),
+                 "page": fields.Int(missing=1),
                  'per_page': fields.Int(missing=20),
                  'sort': fields.Str(missing='weight'),
-                 'order': fields.Str(missing='desc')})
+                 'order': fields.Str(missing='desc')}, location="query")  # set location to query for pagination
+    @cache.cached(timeout=60, query_string=True)
+    @jwt_required
     def get(self, q, page, per_page, sort, order):
 
         # json_data = request.get_json()
@@ -37,6 +38,7 @@ class ProductList(Resource):
         #     data = product_search_schema.load(json_data)
         # except ValidationError as err:
         #     return err.messages
+
         products = ProductModel.get_all_published(
             "",  page, per_page, sort, order)
 
@@ -71,6 +73,7 @@ class Product(Resource):
    # @jwt_required
    # @requires_access_level(ACCESS['user'])
     @cache.cached(timeout=60, query_string=True)
+    @jwt_required
     def get(self, id):
         product = ProductModel.find_by_id(id)
         if product:
