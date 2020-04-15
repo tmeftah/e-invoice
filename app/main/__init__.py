@@ -3,7 +3,7 @@ from os.path import abspath, dirname, join, pardir
 from importlib import import_module
 from flask import Flask, current_app
 from flask_cors import CORS
-from app.main.resources import db, api, jwt
+from app.main.resources import db, api, jwt, cache
 from app.main.config import config_by_name
 
 
@@ -28,6 +28,24 @@ def register_extension(app):
     db.init_app(app)
     api.init_app(app)
     jwt.init_app(app)
+    cache.init_app(app)
+
+    @app.before_first_request
+    def create_tables():
+        db.create_all()
+
+    # @app.before_request
+    # def before_request_func():
+    #     print('\n==================== BEFORE REQUEST ====================\n')
+    #     print(cache.cache._cache.keys())
+    #     print('\n=======================================================\n')
+
+    # @app.after_request
+    # def after_request(response):
+    #     print('\n==================== AFTER REQUEST ====================\n')
+    #     print(cache.cache._cache.keys())
+    #     print('\n=======================================================\n')
+    #     return response
 
 
 def create_app(config_name):
@@ -46,9 +64,6 @@ def create_app(config_name):
             from sqlalchemy import event
             event.listen(db.engine, 'connect', _fk_pragma_on_connect)
 
-    @app.before_first_request
-    def create_tables():
-        db.create_all()
     return app
 
 

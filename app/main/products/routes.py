@@ -5,23 +5,26 @@ from flask import request, jsonify
 from flask_restful import Resource, reqparse
 from marshmallow import ValidationError
 from flask_jwt_extended import jwt_required, current_user
-from app.main.resources import api
+from app.main.resources import api, cache
 from app.main.models.products import ProductModel
 from app.main.schemas.product import ProductSchema, ProductPaginationSchema, ProductSearchSchema
 from app.main.users.decorators import requires_access_level
 from app.main.models.users import ACCESS
+from app.main.utils import clear_cache, cache_json_keys
 
 
 product_pagiantion_schema = ProductPaginationSchema()
 product_search_schema = ProductSearchSchema()
 
 
+
 class ProductList(Resource):
 
-    @jwt_required
     # @requires_access_level(ACCESS['guest'])
-    def get(self):
 
+    @cache.cached(timeout=60, key_prefix=cache_json_keys)
+    @jwt_required
+    def get(self):
         json_data = request.get_json()
 
         try:
@@ -65,6 +68,7 @@ class Product(Resource):
 
    # @jwt_required
    # @requires_access_level(ACCESS['user'])
+    @cache.cached(timeout=60, query_string=True)
     def get(self, id):
         product = ProductModel.find_by_id(id)
         if product:
@@ -79,6 +83,7 @@ class Product(Resource):
         if product:
             product.name = args['name']
             product.save_to_db()
+            clear_cache('/products')
 
             return {'message': 'product {} found'.format(args['name'])}, HTTPStatus.OK
         else:

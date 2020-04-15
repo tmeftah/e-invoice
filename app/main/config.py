@@ -10,6 +10,8 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'secret_key_please_change')
     DEBUG = False
     JWT_ERROR_MESSAGE_KEY = 'message'
+    CACHE_TYPE = 'simple'
+    CACHE_DEFAULT_TIMEOUT = 10 * 60  # 10 x 60 seconds = 10 minutes
 
 
 class DevelopmentConfig(Config):
