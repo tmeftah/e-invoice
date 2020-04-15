@@ -72,5 +72,13 @@ class ProductModel(db.Model):
             db.session.rollback()
             raise
 
+    def delete_from_db(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
+
     def __repr__(self):
         return "<Product '{}'>".format(self.name)

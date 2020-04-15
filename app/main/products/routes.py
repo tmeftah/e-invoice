@@ -103,3 +103,17 @@ class Product(Resource):
         clear_cache('/products')
 
         return product_schema.dump(product), HTTPStatus.OK
+
+    @jwt_required
+    def delete(self, id):
+
+        product = ProductModel.find_by_id(id=id)
+
+        if product is None:
+            return {'message': 'Product not found'}, HTTPStatus.NOT_FOUND
+
+        product.delete_from_db()
+
+        clear_cache('/products')
+
+        return {}, HTTPStatus.NO_CONTENT
