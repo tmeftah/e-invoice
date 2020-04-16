@@ -1,29 +1,35 @@
 from datetime import datetime
+from flask_sqlalchemy import Model
 from sqlalchemy.exc import DatabaseError
 from sqlalchemy import asc, desc, or_
+from sqlalchemy.ext.declarative import declared_attr
 from app.main.resources import db
+from app.main.models.base import UserMixin
 
 
-class ProductModel(db.Model):
-    """ User Model for storing user details """
+class BrandModel(UserMixin, db.Model):
+
+    """ Brand Model for sorting Brand details """
+
+    __tablename__ = 'brands'
+
+    name = db.Column(db.String(120), unique=True, nullable=False)
+    description = db.Column(db.String(120))
+    website = db.Column(db.String(120))
+
+
+class ProductModel(UserMixin, db.Model):
+
+    """ Product Model for storing product details """
+
     __tablename__ = 'products'
 
-    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     partNumber = db.Column(db.String(120))
     status = db.Column(db.Boolean)
     weight = db.Column(db.Float)
     url = db.Column(db.String(120))
     description = db.Column(db.String(120))
-    createdAt = db.Column(db.DateTime, default=datetime.utcnow)
-    updateAt = db.Column(db.DateTime)
-    createdBy_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-                             nullable=False)
-    updatedBy_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    createdBy = db.relationship(
-        'UserModel', backref="createdBy", foreign_keys=[createdBy_id])
-    updatedBy = db.relationship(
-        'UserModel', backref="updatedBy", foreign_keys=[updatedBy_id])
 
     @classmethod
     def get_all_published(cls, q, page, per_page, sort, order):

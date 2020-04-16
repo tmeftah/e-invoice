@@ -61,6 +61,7 @@ class ProductList(Resource):
             new_product = ProductModel(**data)
             new_product.createdBy_id = current_user.id
             new_product.save_to_db()
+            clear_cache('/products')
             return schema.dump(new_product), HTTPStatus.CREATED
 
         except Exception as e:
