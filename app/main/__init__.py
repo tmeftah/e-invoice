@@ -1,11 +1,12 @@
 import sys
-from os.path import abspath, dirname, join, pardir
 from importlib import import_module
+from os.path import abspath, dirname, join, pardir
+
 from flask import Flask, current_app
 from flask_cors import CORS
-from app.main.resources import db, api, jwt, cache
-from app.main.config import config_by_name
 
+from app.main.config import config_by_name
+from app.main.resources import api, cache, db, jwt
 
 # prevent python from writing *.pyc files / __pycache__ folders
 sys.dont_write_bytecode = True

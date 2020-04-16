@@ -3,7 +3,6 @@ import unittest
 from app.main import create_app
 from app.main.resources import db
 
-
 app = create_app('test')
 
 

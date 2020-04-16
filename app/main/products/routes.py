@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+
 from http import HTTPStatus
-from flask import request, jsonify
+
+from flask import request
+from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from marshmallow import ValidationError
-from flask_jwt_extended import jwt_required, current_user
 from webargs import fields
 from webargs.flaskparser import use_kwargs
-from app.main.resources import api, cache
+
 from app.main.models.products import ProductModel
-from app.main.schemas.product import ProductSchema, ProductPaginationSchema, ProductSearchSchema
-from app.main.users.decorators import requires_access_level
-from app.main.models.users import ACCESS
-from app.main.utils import clear_cache, cache_json_keys
+from app.main.resources import cache
+from app.main.schemas.product import ProductPaginationSchema, ProductSchema
+from app.main.utils import clear_cache
 
 product_schema = ProductSchema()
 product_pagiantion_schema = ProductPaginationSchema()

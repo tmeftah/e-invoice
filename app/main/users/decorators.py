@@ -1,5 +1,7 @@
 from functools import wraps
+
 from flask_jwt_extended import get_jwt_identity
+
 from app.main.models.users import UserModel
 
 

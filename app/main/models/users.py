@@ -1,6 +1,6 @@
 from passlib.hash import pbkdf2_sha256 as sha256
-from app.main.resources import db
 
+from app.main.resources import db
 
 ACCESS = {
     'guest': 0,

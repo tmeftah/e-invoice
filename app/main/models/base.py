@@ -1,6 +1,7 @@
 from datetime import datetime
-from flask_sqlalchemy import Model
+
 import sqlalchemy as sa
+from flask_sqlalchemy import Model
 from sqlalchemy.ext.declarative import declared_attr
 
 

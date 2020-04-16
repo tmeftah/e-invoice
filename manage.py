@@ -2,10 +2,8 @@ import unittest
 
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, Shell
-from flask import current_app
 
-from app.main import db
-from app.main import create_app
+from app.main import create_app, db
 from app.main.models.users import UserModel
 
 app = create_app('dev')

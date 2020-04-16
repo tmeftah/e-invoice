@@ -1,13 +1,16 @@
 import datetime
 from http import HTTPStatus
-from flask import jsonify, current_app, request
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_raw_jwt, get_jwt_identity
-from app.main.auth.jwt import add_token_to_database, get_user_tokens, unrevoke_token, revoke_token
-from app.main.auth.exceptions_list import TokenNotFound
-from app.main.resources import api
-from app.main.models.users import UserModel
 
+from flask import current_app
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                get_jwt_identity, get_raw_jwt,
+                                jwt_refresh_token_required, jwt_required)
+from flask_restful import Resource, reqparse
+
+from app.main.auth.exceptions_list import TokenNotFound
+from app.main.auth.jwt import (add_token_to_database, get_user_tokens,
+                               revoke_token, unrevoke_token)
+from app.main.models.users import UserModel
 
 parser_auth = reqparse.RequestParser()
 parser_auth.add_argument(

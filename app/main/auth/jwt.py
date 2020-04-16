@@ -1,11 +1,12 @@
 from datetime import datetime
+
+from flask_jwt_extended import decode_token
 from sqlalchemy.orm.exc import NoResultFound
-from flask_restful import Resource
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_refresh_token_required, decode_token
-from app.main.resources import db, jwt, api
-from app.main.models.users import UserModel
-from app.main.models.auth import TokenBlacklist
+
 from app.main.auth.exceptions_list import TokenNotFound
+from app.main.models.auth import TokenBlacklist
+from app.main.models.users import UserModel
+from app.main.resources import db, jwt
 
 
 def _epoch_utc_to_datetime(epoch_utc):

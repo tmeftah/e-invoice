@@ -1,10 +1,8 @@
-from datetime import datetime
-from flask_sqlalchemy import Model
-from sqlalchemy.exc import DatabaseError
+
 from sqlalchemy import asc, desc, or_
-from sqlalchemy.ext.declarative import declared_attr
-from app.main.resources import db
+
 from app.main.models.base import UserMixin
+from app.main.resources import db
 
 
 class BrandModel(UserMixin, db.Model):

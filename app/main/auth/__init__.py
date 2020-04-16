@@ -1,5 +1,8 @@
+from app.main.auth.routes import (GetTokenList, ModifyToken, TokenRefresh,
+                                  UserLogin, UserLogoutAccess,
+                                  UserLogoutRefresh, UserRegistration)
 from app.main.resources import api
-from app.main.auth.routes import UserRegistration, UserLogin, GetTokenList, TokenRefresh, ModifyToken, UserLogoutAccess, UserLogoutRefresh
+
 api.add_resource(UserRegistration, '/registration')
 api.add_resource(UserLogin, '/login')
 api.add_resource(GetTokenList, '/user/token/list')
