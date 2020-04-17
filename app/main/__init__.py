@@ -17,7 +17,7 @@ sys.dont_write_bytecode = True
 #     sys.path.append(path_source)
 
 
-list_of_module = ['auth', 'users', 'products']
+list_of_module = ['auth', 'users', 'products', 'brands']
 
 
 def register_modules(modules_list):
