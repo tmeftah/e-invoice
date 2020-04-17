@@ -1,5 +1,5 @@
 from app.main.resources import api
-from app.main.users.routes import UserList, UserPorfile
+from app.main.users.routes import User, UserList
 
-api.add_resource(UserList, '/user/list')
-api.add_resource(UserPorfile, '/user/<int:user_id>/profile')
+api.add_resource(UserList, '/users', endpoint='users')
+api.add_resource(User, '/users/<int:id>', endpoint='user')

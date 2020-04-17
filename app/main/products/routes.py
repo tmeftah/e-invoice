@@ -9,6 +9,7 @@ from marshmallow import ValidationError
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
+from app.main.models.brands import BrandModel
 from app.main.models.products import ProductModel
 from app.main.resources import cache
 from app.main.schemas.product import ProductPaginationSchema, ProductSchema
@@ -28,10 +29,9 @@ class ProductList(Resource):
                  'per_page': fields.Int(missing=20),
                  'sort': fields.Str(missing='weight'),
                  'order': fields.Str(missing='desc')}, location="query")  # set location to query for pagination
-    @cache.cached(timeout=60, query_string=True)
+    # @cache.cached(timeout=60, query_string=True)
     @jwt_required
     def get(self, q, page, per_page, sort, order):
-
         # json_data = request.get_json()
 
         # try:
@@ -40,7 +40,7 @@ class ProductList(Resource):
         #     return err.messages
 
         products = ProductModel.get_all_published(
-            "",  page, per_page, sort, order)
+            "", page, per_page, sort, order)
 
         return product_pagiantion_schema.dump(products)
 
@@ -77,10 +77,10 @@ class Product(Resource):
     @jwt_required
     def get(self, id):
         product = ProductModel.find_by_id(id)
-        if product:
-            return product.to_json()
-        else:
+        if not product:
             return {'message': 'no product found'}, HTTPStatus.NOT_FOUND
+
+        return product_schema.dump(product), HTTPStatus.OK
 
     @jwt_required
     def put(self, id):
@@ -99,6 +99,8 @@ class Product(Resource):
         product.name = data.get('name') or product.name
         product.description = data.get('description') or product.description
         product.partNumber = data.get('partNumber') or product.partNumber
+        if data.get('brand_id') and BrandModel.find_by_id(data.get('brand_id')):
+            product.brand_id = data.get('brand_id') or product.brand_id
 
         product.updatedBy_id = current_user.id
 

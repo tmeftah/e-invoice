@@ -3,33 +3,9 @@ from marshmallow import INCLUDE, Schema, fields
 from marshmallow.validate import Length
 
 from app.main.models.products import ProductModel
-from app.main.models.users import ACCESS, UserModel
+from app.main.schemas.brands import BrandSchema
 from app.main.schemas.pagination import PaginationSchema
-
-
-def invert_dict(d):
-    return dict([(v, k) for k, v in d.items()])
-
-
-class AccessSchema(fields.Field):
-
-    def _serialize(self, value, attr, obj, **kwargs):
-        if value is None:
-            return ""
-        return invert_dict(ACCESS)[value]
-
-    def _deserialize(self, value, attr, data, **kwargs):
-        return value.lower()
-
-
-class UserSchema(Schema):
-
-    class Meta:
-        model = UserModel
-
-    id = fields.Int()
-    username = fields.Str(data_key="name")  # change field name with data_key
-    access = AccessSchema()
+from app.main.schemas.users import UserSchema
 
 
 class ProductSearchSchema(Schema):
@@ -50,6 +26,8 @@ class ProductSchema(Schema):
     name = fields.Str(required=True, validate=Length(max=120))
     weight = fields.Float()
     description = fields.Str(validate=Length(max=120))
+    brand_id = fields.Int()
+    brand = fields.Nested(BrandSchema(only=('name',)), dump_only=True)
     partNumber = fields.Str(validate=Length(max=120))
     # use only to reduce fields to show
     createdBy_id = fields.Int(dump_only=True)

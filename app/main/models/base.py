@@ -1,40 +1,34 @@
-from datetime import datetime
 
 import sqlalchemy as sa
 from flask_sqlalchemy import Model
-from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy import asc, desc, or_
 
 
 class BaseModel(Model):
 
     id = sa.Column(sa.Integer, primary_key=True)
 
+    @classmethod
+    def get_all_published(cls, q, page, per_page, sort, order, **kwargs):
 
-class UserMixin(Model):
+        keyword = '%{keyword}%'.format(keyword=q)
 
-    @declared_attr
-    def createdAt(cls):
-        return sa.Column(sa.DateTime, default=datetime.utcnow)
+        if order == 'asc':
+            sort_logic = asc(getattr(cls, sort))
+        else:
+            sort_logic = desc(getattr(cls, sort))
 
-    @declared_attr
-    def updateAt(cls):
-        return sa.Column(sa.DateTime)
+        if hasattr(cls, 'username'):
+            name = cls.username
+        else:
+            name = cls.name
 
-    @declared_attr
-    def createdBy_id(cls):
-        return sa.Column(sa.Integer, sa.ForeignKey('users.id'),
-                         nullable=False)
+        return cls.query.filter(name.ilike(keyword)).order_by(sort_logic).paginate(page=page, per_page=per_page)
 
-    @declared_attr
-    def updatedBy_id(cls):
-        return sa.Column(sa.Integer, sa.ForeignKey('users.id'))
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
 
-    @declared_attr
-    def createdBy(cls):
-        return sa.orm.relationship(
-            'UserModel', foreign_keys=[cls.createdBy_id])
-
-    @declared_attr
-    def updatedBy(cls):
-        return sa.orm.relationship(
-            'UserModel', foreign_keys=[cls.updatedBy_id])
+    @classmethod
+    def find_by_name(cls, name):
+        return cls.query.filter_by(name=name).first()

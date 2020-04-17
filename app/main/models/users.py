@@ -1,5 +1,6 @@
 from passlib.hash import pbkdf2_sha256 as sha256
 
+from app.main.models.utils import BaseMixin
 from app.main.resources import db
 
 ACCESS = {
@@ -9,7 +10,7 @@ ACCESS = {
 }
 
 
-class UserModel(db.Model):
+class UserModel(BaseMixin, db.Model):
     """ User Model for storing user details """
     __tablename__ = 'users'
 
@@ -32,34 +33,8 @@ class UserModel(db.Model):
         return sha256.verify(password, hash)
 
     @classmethod
-    def find_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
-
-    @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
-
-    @classmethod
-    def return_all(cls):
-        def to_json(user):
-            return {
-                'username': user.username,
-                'password': user.password
-            }
-        return {'users': list(map(lambda user: to_json(user), UserModel.query.all()))}
-
-    @classmethod
-    def delete_all(cls):
-        try:
-            num_rows_deleted = db.session.query(cls).delete()
-            db.session.commit()
-            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
-        except:
-            return {'message': 'Something went wrong'}
-
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
 
     def __repr__(self):
         return "<User '{}'>".format(self.username)
