@@ -34,6 +34,7 @@ class UserList(Resource):
     @jwt_required
     def get(self, page, per_page, sort, order, **kwargs):
 
+        users = UserModel.query.pagination(page, per_page)
         return user_pagiantion_schema.dump(users)
 
     def post(self):

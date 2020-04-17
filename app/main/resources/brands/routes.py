@@ -36,6 +36,7 @@ class BrandList(Resource):
         # except ValidationError as err:
         #     return err.messages
 
+        products = BrandModel.query.pagination(page, per_page)
 
         return brand_pagiantion_schema.dump(products)
 

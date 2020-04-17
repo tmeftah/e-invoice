@@ -37,6 +37,9 @@ class ProductList(Resource):
         #     data = product_search_schema.load(json_data)
         # except ValidationError as err:
         #     return err.messages
+        products = ProductModel.query.filter(
+            ProductModel.name.ilike("%hallo%"))
+        products = ProductModel.query.pagination(page, per_page)
 
         return product_pagiantion_schema.dump(products)
 
