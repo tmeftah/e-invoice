@@ -9,8 +9,8 @@ from marshmallow import ValidationError
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
+from app.main.extensions import cache
 from app.main.models.brands import BrandModel
-from app.main.resources import cache
 from app.main.schemas.brands import BrandPaginationSchema, BrandSchema
 from app.main.utils import clear_cache
 
@@ -23,21 +23,19 @@ class BrandList(Resource):
     # @requires_access_level(ACCESS['guest'])
 
     # @cache.cached(timeout=60, key_prefix=cache_json_keys)
-    @use_kwargs({"q": fields.Str(missing=''),
-                 "page": fields.Int(missing=1),
-                 'per_page': fields.Int(missing=20),
-                 'sort': fields.Str(missing='id'),
-                 'order': fields.Str(missing='asc')}, location="query")  # set location to query for pagination
+    @use_kwargs({
+        "page": fields.Int(missing=1),
+        'per_page': fields.Int(missing=20),
+        'sort': fields.Str(missing='id'),
+        'order': fields.Str(missing='asc')}, location="query")  # set location to query for pagination
     @cache.cached(timeout=60, query_string=True)
     @jwt_required
-    def get(self, q, page, per_page, sort, order):
+    def get(self, page, per_page, sort, order):
 
         # json_data = request.get_json()
         # except ValidationError as err:
         #     return err.messages
 
-        products = BrandModel.get_all_published(
-            "", page, per_page, sort, order)
 
         return brand_pagiantion_schema.dump(products)
 

@@ -6,7 +6,7 @@ from flask import Flask, current_app
 from flask_cors import CORS
 
 from app.main.config import config_by_name
-from app.main.resources import api, cache, db, jwt
+from app.main.extensions import api, cache, db, jwt
 
 # prevent python from writing *.pyc files / __pycache__ folders
 sys.dont_write_bytecode = True
@@ -22,7 +22,7 @@ list_of_module = ['auth', 'users', 'products', 'brands']
 
 def register_modules(modules_list):
     for module_name in modules_list:
-        import_module(__name__+'.{}'.format(module_name))
+        import_module(__name__+'.resources.{}'.format(module_name))
 
 
 def register_extension(app):

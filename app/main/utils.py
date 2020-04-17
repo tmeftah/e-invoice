@@ -1,6 +1,6 @@
 from flask import request
 
-from app.main.resources import cache
+from app.main.extensions import cache
 
 
 def clear_cache(key_prefix):

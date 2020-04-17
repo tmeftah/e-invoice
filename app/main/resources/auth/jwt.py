@@ -3,10 +3,10 @@ from datetime import datetime
 from flask_jwt_extended import decode_token
 from sqlalchemy.orm.exc import NoResultFound
 
-from app.main.auth.exceptions_list import TokenNotFound
+from app.main.extensions import db, jwt
 from app.main.models.auth import TokenBlacklist
 from app.main.models.users import UserModel
-from app.main.resources import db, jwt
+from app.main.resources.auth.exceptions_list import TokenNotFound
 
 
 def _epoch_utc_to_datetime(epoch_utc):

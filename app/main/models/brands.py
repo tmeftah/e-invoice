@@ -1,7 +1,7 @@
 
 
+from app.main.extensions import db
 from app.main.models.utils import UserMixin
-from app.main.resources import db
 
 
 class BrandModel(UserMixin, db.Model):

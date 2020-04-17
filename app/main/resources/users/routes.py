@@ -7,10 +7,10 @@ from marshmallow import ValidationError
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
+from app.main.extensions import cache
 from app.main.models.users import ACCESS, UserModel
-from app.main.resources import cache
+from app.main.resources.users.decorators import requires_access_level
 from app.main.schemas.users import UserPaginationSchema, UserSchema
-from app.main.users.decorators import requires_access_level
 from app.main.utils import clear_cache
 
 # -*- coding: utf-8 -*-
@@ -25,17 +25,15 @@ class UserList(Resource):
     # @requires_access_level(ACCESS['guest'])
 
     # @cache.cached(timeout=60, key_prefix=cache_json_keys)
-    @use_kwargs({"q": fields.Str(missing=''),
-                 "page": fields.Int(missing=1),
-                 'per_page': fields.Int(missing=20),
-                 'sort': fields.Str(missing='username'),
-                 'order': fields.Str(missing='asc')}, location="query")  # set location to query for pagination
+    @use_kwargs({
+        "page": fields.Int(missing=1),
+        'per_page': fields.Int(missing=20),
+        'sort': fields.Str(missing='username'),
+        'order': fields.Str(missing='asc')}, location="query")  # set location to query for pagination
     @cache.cached(timeout=60, query_string=True)
     @jwt_required
-    def get(self, q, page, per_page, sort, order, **kwargs):
+    def get(self, page, per_page, sort, order, **kwargs):
 
-        users = UserModel.get_all_published(
-            q, page, per_page, sort, order)
         return user_pagiantion_schema.dump(users)
 
     def post(self):

@@ -1,8 +1,8 @@
 
 from sqlalchemy import asc, desc, or_
 
+from app.main.extensions import db
 from app.main.models.utils import UserMixin
-from app.main.resources import db
 
 
 class ProductModel(UserMixin, db.Model):

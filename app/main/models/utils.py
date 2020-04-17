@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
 
-from app.main.resources import db
+from app.main.extensions import db
 
 
 class BaseMixin(Model):

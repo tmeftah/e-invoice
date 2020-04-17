@@ -7,10 +7,11 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_refresh_token_required, jwt_required)
 from flask_restful import Resource, reqparse
 
-from app.main.auth.exceptions_list import TokenNotFound
-from app.main.auth.jwt import (add_token_to_database, get_user_tokens,
-                               revoke_token, unrevoke_token)
 from app.main.models.users import UserModel
+from app.main.resources.auth.exceptions_list import TokenNotFound
+from app.main.resources.auth.jwt import (add_token_to_database,
+                                         get_user_tokens, revoke_token,
+                                         unrevoke_token)
 
 parser_auth = reqparse.RequestParser()
 parser_auth.add_argument(

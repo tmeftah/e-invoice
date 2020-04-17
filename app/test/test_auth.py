@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from app.main.resources import db
+from app.main.extensions import db
 from app.test.base import BaseTestCase
 
 

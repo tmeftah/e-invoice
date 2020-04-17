@@ -1,7 +1,7 @@
 import unittest
 
 from app.main import create_app
-from app.main.resources import db
+from app.main.extensions import db
 
 app = create_app('test')
 

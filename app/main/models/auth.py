@@ -1,4 +1,4 @@
-from app.main.resources import db
+from app.main.extensions import db
 
 
 class TokenBlacklist(db.Model):
