@@ -70,8 +70,7 @@ class ProductList(Resource):
 
 class Product(Resource):
 
-   # @jwt_required
-   # @requires_access_level(ACCESS['user'])
+    # @requires_access_level(ACCESS['user'])
     @cache.cached(timeout=60, query_string=True)
     @jwt_required
     def get(self, id):
