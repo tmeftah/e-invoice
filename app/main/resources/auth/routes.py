@@ -53,7 +53,7 @@ class UserLogin(Resource):
 
         if UserModel.verify_hash(data['password'], current_user.password):
             # Create our JWTs
-            expires = datetime.timedelta(seconds=360)
+            expires = datetime.timedelta(seconds=10)
             access_token = create_access_token(
                 identity=data['username'], expires_delta=expires)
             refresh_token = create_refresh_token(identity=data['username'])
@@ -69,7 +69,7 @@ class UserLogin(Resource):
                     'refresh_token': refresh_token
                     }
         else:
-            return {'message': 'Wrong credentials'},  HTTPStatus.UNAUTHORIZED
+            return {'message': 'Wrong credentials'}, HTTPStatus.UNAUTHORIZED
         # return {'message': 'User login'}
 
 
@@ -78,10 +78,12 @@ class TokenRefresh(Resource):
     def post(self):
         # Do the same thing that we did in the login endpoint here
         current_user = get_jwt_identity()
-        access_token = create_access_token(identity=current_user)
+        expires = datetime.timedelta(seconds=10)
+        access_token = create_access_token(
+            identity=current_user, expires_delta=expires)
         add_token_to_database(
             access_token, current_app.config['JWT_IDENTITY_CLAIM'])
-        return {'access_token': access_token},  HTTPStatus.CREATED
+        return {'access_token': access_token}, HTTPStatus.CREATED
 
 
 class GetTokenList(Resource):
