@@ -26,8 +26,7 @@ class ProductSchema(Schema):
     name = fields.Str(required=True, validate=Length(max=120))
     weight = fields.Float()
     description = fields.Str(validate=Length(max=120))
-    brand_id = fields.Int()
-    brand = fields.Nested(BrandSchema(only=('name',)), dump_only=True)
+    brand = fields.Nested(BrandSchema(only=('name', 'id')), dump_only=True)
     partNumber = fields.Str(validate=Length(max=120))
     # use only to reduce fields to show
     createdBy_id = fields.Int(dump_only=True)
