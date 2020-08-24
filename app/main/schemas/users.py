@@ -31,7 +31,7 @@ class UserSchema(Schema):
     # change field name with data_key
     password = fields.Str(validate=Length(max=120), load_only=True)
     username = fields.Str(validate=Length(max=120),
-                          data_key="username", dump_only=True)
+                          data_key="username")
     access = AccessSchema()
     hyperlink = fields.Method("_hyperlink", dump_only=True)
 

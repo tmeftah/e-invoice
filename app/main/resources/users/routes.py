@@ -37,13 +37,15 @@ class UserList(Resource):
         users = UserModel.query.pagination(page, per_page)
         return user_pagiantion_schema.dump(users)
 
+    @jwt_required
     def post(self):
+
         json_data = request.get_json()
-        schema = UserSchema(exclude=("hyperlink",))
+        schema = UserSchema()
         try:
             data = schema.load(json_data)
         except ValidationError as err:
-            return err.messages
+            return err.messages, HTTPStatus.UNPROCESSABLE_ENTITY
 
         if UserModel.find_by_username(data.get("username")):
             return {'message': "User already exists. Please Log in.",
