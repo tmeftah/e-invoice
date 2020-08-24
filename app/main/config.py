@@ -1,3 +1,4 @@
+import datetime
 import os
 
 # uncomment the line below for postgres database url from environment variable
@@ -24,6 +25,8 @@ class DevelopmentConfig(Config):
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'jwt-secret-string')
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']
+    CACHE_DEFAULT_TIMEOUT = 300
+    TOKEN_TIMEOUT = datetime.timedelta(seconds=3600)
 
 
 class TestingConfig(Config):
