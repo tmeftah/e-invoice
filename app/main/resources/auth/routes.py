@@ -53,9 +53,8 @@ class UserLogin(Resource):
 
         if UserModel.verify_hash(data['password'], current_user.password):
             # Create our JWTs
-            expires = datetime.timedelta(seconds=10)
             access_token = create_access_token(
-                identity=data['username'], expires_delta=expires)
+                identity=data['username'], expires_delta=current_app.config["TOKEN_TIMEOUT"])
             refresh_token = create_refresh_token(identity=data['username'])
 
             # Store the tokens in our store with a status of not currently revoked.
@@ -78,9 +77,8 @@ class TokenRefresh(Resource):
     def post(self):
         # Do the same thing that we did in the login endpoint here
         current_user = get_jwt_identity()
-        expires = datetime.timedelta(seconds=10)
         access_token = create_access_token(
-            identity=current_user, expires_delta=expires)
+            identity=current_user, expires_delta=current_app.config["TOKEN_TIMEOUT"])
         add_token_to_database(
             access_token, current_app.config['JWT_IDENTITY_CLAIM'])
         return {'access_token': access_token}, HTTPStatus.CREATED
